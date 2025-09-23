@@ -5,7 +5,13 @@ source 'https://rubygems.org'
 def eval_version(dependency, version)
   return [dependency] if version.empty?
 
-  version.count('.') < 2 ? [dependency, "~> #{version}.0"] : [dependency, version]
+  # Handle versions that already have operators like ~>, >=, etc.
+  if version.match?(/^[~<>=]/)
+    [dependency, version]
+  else
+    # Add ~> operator and ensure version has at least 2 dots
+    version.count('.') < 2 ? [dependency, "~> #{version}.0"] : [dependency, "~> #{version}"]
+  end
 end
 
 if ENV['DEVEL'] == '1'
