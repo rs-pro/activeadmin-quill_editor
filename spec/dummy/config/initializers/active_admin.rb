@@ -216,6 +216,9 @@ ActiveAdmin.setup do |config|
   # To load a javascript file:
   #   config.register_javascript 'my_javascript.js'
 
+  # ActiveAdmin 4 with Propshaft loads assets via the application layout
+  # and the manifest.js file, not via register_stylesheet/register_javascript
+
   # == CSV options
   #
   # Set the CSV builder separator

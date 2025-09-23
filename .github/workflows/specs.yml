@@ -1,0 +1,155 @@
+---
+name: Specs
+
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master]
+
+jobs:
+  test_legacy:
+    runs-on: ubuntu-latest
+    name: Ruby ${{ matrix.ruby }} / Rails ${{ matrix.rails }} / AA ${{ matrix.activeadmin }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Legacy ActiveAdmin 2.x/3.x support
+          - ruby: '3.0'
+            rails: '7.0'
+            activeadmin: '~> 2.9'
+          - ruby: '3.1'
+            rails: '7.1'
+            activeadmin: '~> 3.0'
+          - ruby: '3.2'
+            rails: '7.2'
+            activeadmin: '~> 3.0'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: false
+
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundle config set --local without 'development'
+          bundle install --jobs 4 --retry 3
+        env:
+          RAILS_VERSION: ${{ matrix.rails }}
+          ACTIVEADMIN_VERSION: ${{ matrix.activeadmin }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install NPM dependencies
+        run: |
+          cd spec/dummy
+          npm install
+
+      - name: Build assets
+        run: |
+          cd spec/dummy
+          npm run build
+
+      - name: Run tests
+        run: bundle exec rspec --profile
+        env:
+          RAILS_VERSION: ${{ matrix.rails }}
+          ACTIVEADMIN_VERSION: ${{ matrix.activeadmin }}
+
+      - name: Archive screenshots on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-screenshots-legacy-${{ matrix.ruby }}-${{ matrix.rails }}
+          path: spec/dummy/tmp/capybara
+
+  test_activeadmin_4:
+    runs-on: ubuntu-latest
+    name: Ruby ${{ matrix.ruby }} / Rails ${{ matrix.rails }} / AA 4.x
+
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ['3.2', '3.3']
+        rails: ['7.2', '8.0']
+        exclude:
+          # Rails 8 requires Ruby 3.2+
+          - ruby: '3.1'
+            rails: '8.0'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: false
+
+      - name: Install dependencies for AA4
+        run: |
+          gem install bundler
+          bundle config set --local without 'development'
+          bundle add activeadmin --version '~> 4.0.0.beta' --skip-install
+          bundle add importmap-rails --skip-install
+          bundle add propshaft --skip-install if [ "${{ matrix.rails }}" = "7.2" ]
+          bundle install --jobs 4 --retry 3
+        env:
+          RAILS_VERSION: ${{ matrix.rails }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install NPM dependencies
+        run: |
+          cd spec/dummy
+          npm install
+          npm install @activeadmin/activeadmin@^4.0.0-beta
+
+      - name: Build assets
+        run: |
+          cd spec/dummy
+          npm run build
+
+      - name: Run tests
+        run: bundle exec rspec --profile
+        env:
+          RAILS_VERSION: ${{ matrix.rails }}
+          ACTIVEADMIN_VERSION: '4.0'
+
+      - name: Archive screenshots on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-screenshots-aa4-${{ matrix.ruby }}-${{ matrix.rails }}
+          path: spec/dummy/tmp/capybara
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Run RuboCop
+        run: bundle exec rubocop --parallel

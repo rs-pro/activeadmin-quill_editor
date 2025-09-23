@@ -1,0 +1,73 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+/* Import Quill styles */
+@import "../../../node_modules/quill/dist/quill.snow.css";
+@import "../../../node_modules/quill/dist/quill.bubble.css";
+
+/* Custom Quill integration styles for ActiveAdmin */
+@layer components {
+  .quill-editor {
+    @apply border border-gray-300 rounded-md;
+  }
+
+  .ql-toolbar {
+    @apply border-b-0 rounded-t-md;
+  }
+
+  .ql-container {
+    @apply rounded-b-md;
+  }
+
+  .ql-editor {
+    @apply min-h-[200px];
+  }
+
+  /* Dark mode support */
+  .dark .quill-editor {
+    @apply border-gray-600;
+  }
+
+  .dark .ql-toolbar {
+    @apply bg-gray-800 border-gray-600;
+  }
+
+  .dark .ql-container {
+    @apply bg-gray-900 border-gray-600;
+  }
+
+  .dark .ql-editor {
+    @apply text-gray-100;
+  }
+
+  /* Fix toolbar button styles */
+  .ql-toolbar button:hover {
+    @apply bg-gray-100 dark:bg-gray-700;
+  }
+
+  /* Ensure icons are visible in dark mode */
+  .dark .ql-toolbar button svg {
+    @apply text-gray-300;
+  }
+
+  .dark .ql-toolbar button:hover svg {
+    @apply text-white;
+  }
+
+  .dark .ql-toolbar .ql-stroke {
+    stroke: #9ca3af !important;
+  }
+
+  .dark .ql-toolbar .ql-fill {
+    fill: #9ca3af !important;
+  }
+
+  .dark .ql-toolbar button:hover .ql-stroke {
+    stroke: white !important;
+  }
+
+  .dark .ql-toolbar button:hover .ql-fill {
+    fill: white !important;
+  }
+}

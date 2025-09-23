@@ -12,18 +12,19 @@ Gem::Specification.new do |spec|
   spec.license       = 'MIT'
   spec.authors       = ['Mattia Roccoberton']
   spec.email         = 'mat@blocknot.es'
-  spec.homepage      = 'https://github.com/blocknotes/activeadmin_quill_editor'
+  spec.homepage      = 'https://github.com/rs-pro/activeadmin-quill_editor'
 
-  spec.required_ruby_version = '>= 3.0'
+  spec.required_ruby_version = '>= 3.2'
 
   spec.metadata['homepage_uri']    = spec.homepage
-  spec.metadata['changelog_uri']   = 'https://github.com/blocknotes/activeadmin_quill_editor/blob/main/CHANGELOG.md'
+  spec.metadata['changelog_uri']   = 'https://github.com/rs-pro/activeadmin-quill_editor/blob/main/CHANGELOG.md'
   spec.metadata['source_code_uri'] = spec.homepage
 
   spec.metadata['rubygems_mfa_required'] = 'true'
 
-  spec.files         = Dir['{app,lib}/**/*', 'LICENSE.txt', 'Rakefile', 'README.md']
+  spec.files         = Dir['{app,lib,vendor}/**/*', 'LICENSE.txt', 'Rakefile', 'README.md']
   spec.require_paths = ['lib']
 
-  spec.add_runtime_dependency 'activeadmin', '>= 2.9', '< 4' # rubocop:disable Gemspec/AddRuntimeDependency
+  spec.add_runtime_dependency 'activeadmin', '>= 2.9', '< 5' # rubocop:disable Gemspec/AddRuntimeDependency
+  spec.add_runtime_dependency 'rails', '>= 7.0'
 end

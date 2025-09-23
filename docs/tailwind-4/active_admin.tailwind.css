@@ -1,0 +1,16 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@import "activeadmin-tom_select/src/tom-select-tailwind.css";
+
+/* Additional batch actions dropdown styles that aren't in the ActiveAdmin plugin */
+@layer components {
+  .batch-actions-dropdown-toggle:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
+  .batch-actions-dropdown-arrow {
+    @apply w-2.5 h-2.5;
+  }
+}
