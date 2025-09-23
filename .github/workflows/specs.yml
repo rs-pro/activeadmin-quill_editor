@@ -17,10 +17,10 @@ jobs:
       matrix:
         include:
           # Legacy ActiveAdmin 2.x/3.x support
-          - ruby: '3.0'
+          - ruby: '3.2'
             rails: '7.0'
             activeadmin: '~> 2.9'
-          - ruby: '3.1'
+          - ruby: '3.2'
             rails: '7.1'
             activeadmin: '~> 3.0'
           - ruby: '3.2'
@@ -83,10 +83,6 @@ jobs:
       matrix:
         ruby: ['3.2', '3.3']
         rails: ['7.2', '8.0']
-        exclude:
-          # Rails 8 requires Ruby 3.2+
-          - ruby: '3.1'
-            rails: '8.0'
 
     steps:
       - name: Checkout repository

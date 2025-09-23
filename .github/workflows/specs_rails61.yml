@@ -13,7 +13,7 @@ jobs:
 
     strategy:
       matrix:
-        ruby: ['3.0']
+        ruby: ['3.2']
 
     env:
       RAILS_VERSION: 6.0
