@@ -3086,10 +3086,14 @@
           document.addEventListener("turbo:load", initQuillEditors);
           document.addEventListener("turbo:render", initQuillEditors);
           document.addEventListener("turbolinks:load", initQuillEditors);
-          document.addEventListener("has_many_add:after", function(event) {
-            const newFields = event.target.querySelectorAll("[data-aa-quill-editor]");
-            newFields.forEach(initQuillEditor);
-            setupFormSubmission();
+          document.addEventListener("click", function(event) {
+            if (event.target.closest(".has-many-add")) {
+              setTimeout(function() {
+                const newEditors = document.querySelectorAll("[data-aa-quill-editor]:not(.quill-editor--active)");
+                newEditors.forEach(initQuillEditor);
+                setupFormSubmission();
+              }, 10);
+            }
           });
         }
         const QuillEditor = {

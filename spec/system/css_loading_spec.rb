@@ -69,7 +69,8 @@ RSpec.describe 'CSS Loading', type: :system do
 
     it 'applies Quill styles correctly when editor is present' do
       # Create a test model with Quill editor
-      post = Post.create!(title: 'Test Post', description: '<p>Test content</p>')
+      author = Author.create!(email: 'test@example.com', name: 'Test Author', age: 30)
+      post = Post.create!(author: author, title: 'Test Post', description: '<p>Test content</p>')
       visit "/admin/posts/#{post.id}/edit"
 
       # Wait for editor to load

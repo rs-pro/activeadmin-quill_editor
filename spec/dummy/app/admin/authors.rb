@@ -33,7 +33,7 @@ ActiveAdmin.register Author do
       row :profile
       row :posts
     end
-    active_admin_comments
+    active_admin_comments_for(resource) if active_admin_config.comments?
   end
 
   form do |f|

@@ -190,10 +190,16 @@
     document.addEventListener('turbolinks:load', initQuillEditors);
 
     // Support for ActiveAdmin has_many fields
-    document.addEventListener('has_many_add:after', function(event) {
-      const newFields = event.target.querySelectorAll('[data-aa-quill-editor]');
-      newFields.forEach(initQuillEditor);
-      setupFormSubmission();
+    // ActiveAdmin 4 uses .has-many-add button click
+    document.addEventListener('click', function(event) {
+      if (event.target.closest('.has-many-add')) {
+        // Wait for DOM to be updated with new fields
+        setTimeout(function() {
+          const newEditors = document.querySelectorAll('[data-aa-quill-editor]:not(.quill-editor--active)');
+          newEditors.forEach(initQuillEditor);
+          setupFormSubmission();
+        }, 10);
+      }
     });
   }
 
