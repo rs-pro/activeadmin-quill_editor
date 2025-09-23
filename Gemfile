@@ -21,8 +21,13 @@ rails = eval_version('rails', rails_ver)
 gem(*rails)
 
 active_admin_ver = ENV.fetch('ACTIVEADMIN_VERSION', '')
-active_admin = eval_version('activeadmin', active_admin_ver)
-gem(*active_admin)
+if active_admin_ver.empty?
+  # Use ActiveAdmin 4 beta by default for development
+  gem 'activeadmin', '~> 4.0.0.beta'
+else
+  active_admin = eval_version('activeadmin', active_admin_ver)
+  gem(*active_admin)
+end
 
 ruby32 = ruby_ver.empty? || Gem::Version.new(ruby_ver) >= Gem::Version.new('3.2')
 rails72 = rails_ver.empty? || Gem::Version.new(rails_ver) >= Gem::Version.new('7.2')
@@ -39,8 +44,16 @@ gem 'bigdecimal'
 gem 'csv'
 gem 'mutex_m'
 gem 'puma'
-gem 'sassc'
-gem 'sprockets-rails'
+
+# Asset pipeline - use Propshaft for Rails 8, Sprockets for older versions
+rails80 = rails_ver.empty? || Gem::Version.new(rails_ver) >= Gem::Version.new('8.0')
+if rails80
+  gem 'propshaft'
+  gem 'importmap-rails'  # Required for ActiveAdmin 4
+else
+  gem 'sassc'
+  gem 'sprockets-rails'
+end
 
 # Testing
 gem 'capybara'

@@ -1,0 +1,1 @@
+../../../../../vendor/assets/javascripts/activeadmin_quill_editor.js
