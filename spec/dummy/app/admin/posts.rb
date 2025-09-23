@@ -41,7 +41,7 @@ ActiveAdmin.register Post do
         nil
       end
     end
-    active_admin_comments
+    active_admin_comments_for(resource) if active_admin_config.comments?
   end
 
   form do |f|
