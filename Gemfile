@@ -27,13 +27,21 @@ rails = eval_version('rails', rails_ver)
 gem(*rails)
 
 active_admin_ver = ENV.fetch('ACTIVEADMIN_VERSION', '')
-if active_admin_ver.empty?
-  # Use ActiveAdmin 4 beta by default for development
-  gem 'activeadmin', '~> 4.0.0.beta'
-else
-  active_admin = eval_version('activeadmin', active_admin_ver)
-  gem(*active_admin)
-end
+active_admin_requirement =
+  if active_admin_ver.empty?
+    '~> 4.0.0.beta16'
+  elsif active_admin_ver.match?(/[a-zA-Z]/) || active_admin_ver.match?(/^[~<>=]/)
+    active_admin_ver
+  else
+    target = Gem::Version.new(active_admin_ver)
+    if target >= Gem::Version.new('4.0')
+      '~> 4.0.0.beta16'
+    else
+      active_admin_ver.count('.') < 2 ? "~> #{active_admin_ver}.0" : "~> #{active_admin_ver}"
+    end
+  end
+
+gem 'activeadmin', active_admin_requirement
 
 ruby32 = ruby_ver.empty? || Gem::Version.new(ruby_ver) >= Gem::Version.new('3.2')
 rails72 = rails_ver.empty? || Gem::Version.new(rails_ver) >= Gem::Version.new('7.2')
@@ -54,8 +62,8 @@ gem 'puma'
 # Asset pipeline - use Propshaft for Rails 8, Sprockets for older versions
 rails80 = rails_ver.empty? || Gem::Version.new(rails_ver) >= Gem::Version.new('8.0')
 if rails80
+  gem 'importmap-rails' # Required for ActiveAdmin 4
   gem 'propshaft'
-  gem 'importmap-rails'  # Required for ActiveAdmin 4
 else
   gem 'sassc'
   gem 'sprockets-rails'
@@ -80,4 +88,5 @@ gem 'rubocop-rspec'
 gem 'rubocop-rspec_rails'
 
 # Tools
+gem 'appraisal'
 gem 'pry-rails'

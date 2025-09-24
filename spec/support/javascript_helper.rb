@@ -7,6 +7,7 @@ module JavaScriptHelper
       loop do
         quill_loaded = page.evaluate_script('typeof Quill !== "undefined"')
         break if quill_loaded
+
         sleep 0.1
       end
     end
@@ -20,6 +21,7 @@ module JavaScriptHelper
           typeof getQuillEditorByElementId === 'function'
         JS
         break if init_loaded
+
         sleep 0.1
       end
     end
@@ -93,6 +95,7 @@ module JavaScriptHelper
   def quill_has_content?(text, index = 0)
     content = get_quill_content(index)
     return false unless content
+
     content.include?(text)
   end
 

@@ -17,7 +17,7 @@ RSpec.describe 'Quill JS' do
       Admin::Posts::EditPage.new(path: path).load
     end
 
-    it "returns the available editors", :aggregate_failures do
+    it 'returns the available editors', :aggregate_failures do
       editors_count = page.evaluate_script('window.getQuillEditors().length')
       expect(editors_count).to eq 2
 
@@ -40,7 +40,7 @@ RSpec.describe 'Quill JS' do
       Admin::Posts::EditPage.new(path: path).load
     end
 
-    it "returns the expected editor instance" do
+    it 'returns the expected editor instance' do
       expected_element = find('#post_description > .ql-container')
       editor = page.evaluate_script('window.getQuillEditorByIndex(1).container')
       expect(editor).to eq expected_element
@@ -56,7 +56,7 @@ RSpec.describe 'Quill JS' do
       Admin::Posts::EditPage.new(path: path).load
     end
 
-    it "returns the expected editor instance" do
+    it 'returns the expected editor instance' do
       expected_element = find('#post_description > .ql-container')
       editor = page.evaluate_script('window.getQuillEditorByElementId("post_description").container')
       expect(editor).to eq expected_element

@@ -4,7 +4,7 @@ module StringCleanMultiline
   refine String do
     def clean_multiline
       # Get rid of newlines and indentation spaces
-      strip.gsub(/\s*\n\s*/, "")
+      strip.gsub(/\s*\n\s*/, '')
     end
   end
 end
