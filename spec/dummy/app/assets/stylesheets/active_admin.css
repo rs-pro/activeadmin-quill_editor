@@ -17,7 +17,7 @@
   }
 
   .ql-container {
-    @apply rounded-b-md;
+    @apply border border-gray-300 rounded-b-md;
   }
 
   .ql-editor {

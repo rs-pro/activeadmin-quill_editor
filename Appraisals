@@ -48,7 +48,7 @@ end
 appraise 'rails-7.2-active-admin-3.x' do
   gem 'rails', '~> 7.2.0'
   gem 'activeadmin', '~> 3.2'
-  gem 'sqlite3'  # 7.2 can use newer sqlite3
+  gem 'sqlite3' # 7.2 can use newer sqlite3
   gem 'sassc'
   gem 'sprockets-rails'
   remove_gem 'propshaft'
@@ -59,7 +59,7 @@ end
 appraise 'rails-7.2-active-admin-4.x' do
   gem 'rails', '~> 7.2.0'
   gem 'activeadmin', '4.0.0.beta16'
-  gem 'sqlite3'  # 7.2 can use newer sqlite3
+  gem 'sqlite3' # 7.2 can use newer sqlite3
   gem 'importmap-rails'
   gem 'propshaft'
 end
@@ -68,7 +68,7 @@ end
 appraise 'rails-8.0-active-admin-4.x' do
   gem 'rails', '~> 8.0.0'
   gem 'activeadmin', '4.0.0.beta16'
-  gem 'sqlite3'  # Rails 8 needs latest sqlite3
+  gem 'sqlite3' # Rails 8 needs latest sqlite3
   gem 'importmap-rails'
   gem 'propshaft'
 end
