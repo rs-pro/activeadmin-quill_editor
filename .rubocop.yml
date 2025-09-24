@@ -1,7 +1,4 @@
 ---
-inherit_from:
-  - https://relaxed.ruby.style/rubocop.yml
-
 plugins:
   - rubocop-capybara
   - rubocop-packaging
@@ -10,24 +7,64 @@ plugins:
   - rubocop-rspec
   - rubocop-rspec_rails
 
+inherit_mode:
+  merge:
+    - Exclude
+
 AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.0
+  SuggestExtensions: false
+  DisplayCopNames: true
+  CacheRootDirectory: tmp/rubocop-cache
   Exclude:
     - bin/*
+    - coverage/**/*
     - db/schema.rb
+    - docs/**/*
+    - examples/**/*
     - gemfiles/**/*
     - spec/dummy/**/*
     - vendor/**/*
-  NewCops: enable
-  TargetRubyVersion: 3.0
+
+Layout/LineLength:
+  Max: 120
+
+Metrics/BlockLength:
+  Enabled: true
+  Exclude:
+    - spec/**/*
+    - docs/**/*
+
+Metrics/MethodLength:
+  Max: 20
+  Exclude:
+    - spec/**/*
+
+Style/Documentation:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
 
 RSpec/ExampleLength:
-  # default 5
   Max: 12
+  Exclude:
+    - spec/system/**/*
 
 RSpec/MultipleExpectations:
-  # default 1
   Max: 4
+  Exclude:
+    - spec/system/**/*
 
 RSpec/MultipleMemoizedHelpers:
-  # default 5
   Max: 10
+
+Rails/SkipsModelValidations:
+  Enabled: true
+
+Rails/ActiveRecordAliases:
+  Enabled: true

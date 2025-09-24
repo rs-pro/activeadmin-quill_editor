@@ -31,7 +31,7 @@ RSpec.describe 'Quill editor' do
     it 'edits some content using the editor' do
       editor.select_all
       editor.toggle_link
-      editor.tooltip_editing.send_keys(["https://blocknot.es", :return])
+      editor.tooltip_editing.send_keys(['https://blocknot.es', :return])
 
       editor << :right << :return << 'More content'
       editor.toggle_bold
@@ -49,18 +49,18 @@ RSpec.describe 'Quill editor' do
       editor << 'code block enabled' << :return
       editor.toggle_code_block
 
-      editor << "Some text"
+      editor << 'Some text'
       editor.toggle_sub
-      editor << "sub text"
+      editor << 'sub text'
       editor.toggle_sub
-      editor << " More text"
+      editor << ' More text'
       editor.toggle_super
-      editor << "sup text"
+      editor << 'sup text'
       editor.toggle_super
       editor << :return
 
       editor.open_dropdown(:align).toggle_align_right
-      editor << "Text aligned on the right"
+      editor << 'Text aligned on the right'
 
       expect(editor.content).to eq <<~HTML.clean_multiline
         <p><a href="https://blocknot.es" rel="noopener noreferrer" target="_blank">Some content</a></p>

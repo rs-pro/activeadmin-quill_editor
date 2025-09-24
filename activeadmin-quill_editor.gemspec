@@ -5,7 +5,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'activeadmin/quill_editor/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'activeadmin_quill_editor'
+  spec.name          = 'activeadmin-quill_editor'
   spec.version       = ActiveAdmin::QuillEditor::VERSION
   spec.summary       = 'Quill Editor for ActiveAdmin'
   spec.description   = 'An Active Admin plugin to use Quill Rich Text Editor'
@@ -25,6 +25,6 @@ Gem::Specification.new do |spec|
   spec.files         = Dir['{app,lib,vendor}/**/*', 'LICENSE.txt', 'Rakefile', 'README.md']
   spec.require_paths = ['lib']
 
-  spec.add_runtime_dependency 'activeadmin', '>= 2.9', '< 5' # rubocop:disable Gemspec/AddRuntimeDependency
-  spec.add_runtime_dependency 'rails', '>= 6.0'
+  spec.add_dependency 'activeadmin', '>= 2.9', '< 5'
+  spec.add_dependency 'rails', '>= 6.0'
 end

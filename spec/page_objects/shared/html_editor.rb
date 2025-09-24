@@ -18,7 +18,7 @@ module Shared
     end
 
     def select_all
-      content_element.send_keys([:control, "a"])
+      content_element.send_keys([:control, 'a'])
       self
     end
 

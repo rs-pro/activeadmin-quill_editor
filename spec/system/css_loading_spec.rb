@@ -2,12 +2,10 @@
 
 require 'rails_helper'
 
-RSpec.describe 'CSS Loading', type: :system do
+RSpec.describe 'CSS Loading' do
   before do
     # Create an admin user if authentication is enabled
-    if defined?(AdminUser)
-      AdminUser.create!(email: 'admin@example.com', password: 'password')
-    end
+    AdminUser.create!(email: 'admin@example.com', password: 'password') if defined?(AdminUser)
   end
 
   context 'when loading Quill editor CSS' do
@@ -32,10 +30,11 @@ RSpec.describe 'CSS Loading', type: :system do
       # Ensure no CDN URLs
       quill_stylesheets.each do |href|
         next if href == 'inline'
+
         expect(href).not_to match(%r{https?://cdn})
-        expect(href).not_to match(%r{jsdelivr})
-        expect(href).not_to match(%r{unpkg})
-        expect(href).to match(%r{/assets/}) if href != 'inline'
+        expect(href).not_to include('jsdelivr')
+        expect(href).not_to include('unpkg')
+        expect(href).to include('/assets/')
       end
     end
 
@@ -79,20 +78,27 @@ RSpec.describe 'CSS Loading', type: :system do
       # Check that Quill styles are applied
       editor_styles = page.evaluate_script(<<~JS)
         (function() {
-          const editor = document.querySelector('.ql-container');
-          if (!editor) return null;
-          const styles = window.getComputedStyle(editor);
+          const container = document.querySelector('.ql-container');
+          const editor = document.querySelector('.ql-editor');
+          if (!container || !editor) return null;
+
+          const containerStyles = window.getComputedStyle(container);
+          const editorStyles = window.getComputedStyle(editor);
+
           return {
-            position: styles.position,
-            display: styles.display,
-            hasBackground: styles.backgroundColor !== '' && styles.backgroundColor !== 'rgba(0, 0, 0, 0)'
+            containerDisplay: containerStyles.display,
+            containerBorderWidth: parseFloat(containerStyles.borderTopWidth || '0'),
+            editorBackground: editorStyles.backgroundColor,
+            editorPadding: editorStyles.paddingTop
           };
         })()
       JS
 
       expect(editor_styles).not_to be_nil
-      expect(editor_styles['display']).not_to eq('none')
-      expect(editor_styles['hasBackground']).to be true
+      expect(editor_styles['containerDisplay']).not_to eq('none')
+      expect(editor_styles['containerBorderWidth']).to be > 0
+      expect(editor_styles['editorBackground']).not_to eq('rgba(0, 0, 0, 0)')
+      expect(editor_styles['editorPadding']).not_to eq('0px')
 
       # Check toolbar styles
       toolbar_visible = page.evaluate_script(<<~JS)
@@ -124,7 +130,7 @@ RSpec.describe 'CSS Loading', type: :system do
       JS
 
       # Check for bubble theme CSS (if included)
-      bubble_theme_loaded = page.evaluate_script(<<~JS)
+      _bubble_theme_loaded = page.evaluate_script(<<~JS)
         Array.from(document.styleSheets).some(sheet => {
           try {
             return sheet.cssRules && Array.from(sheet.cssRules).some(rule =>

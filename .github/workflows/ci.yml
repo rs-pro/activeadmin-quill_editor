@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ['3.0', '3.1', '3.2', '3.3']
+        gemfile:
+          - rails_6.1_active_admin_2.9
+          - rails_7.0_active_admin_2.x
+          - rails_7.0_active_admin_3.x
+          - rails_7.1_active_admin_3.x
+          - rails_7.2_active_admin_3.x
+          - rails_7.2_active_admin_4.x
+          - rails_8.0_active_admin_4.x
+        exclude:
+          # Rails 8 requires Ruby 3.2+
+          - ruby: '3.0'
+            gemfile: rails_8.0_active_admin_4.x
+          - ruby: '3.1'
+            gemfile: rails_8.0_active_admin_4.x
+          # ActiveAdmin 4 requires Ruby 3.2+
+          - ruby: '3.0'
+            gemfile: rails_7.2_active_admin_4.x
+          - ruby: '3.1'
+            gemfile: rails_7.2_active_admin_4.x
+
+    env:
+      BUNDLE_GEMFILE: ${{ github.workspace }}/gemfiles/${{ matrix.gemfile }}.gemfile
+      RAILS_ENV: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: spec/dummy/package-lock.json
+
+      - name: Install npm dependencies for dummy app
+        run: |
+          cd spec/dummy
+          npm install
+
+      - name: Build assets for dummy app
+        run: |
+          cd spec/dummy
+          # Build JavaScript with esbuild
+          npm run build:js || true
+          # Build CSS with Tailwind for AA4
+          if [[ "${{ matrix.gemfile }}" == *"4.x"* ]]; then
+            npm run build:css || true
+          fi
+
+      - name: Database setup
+        run: |
+          cd spec/dummy
+          bundle exec rails db:create db:migrate db:test:prepare
+
+      - name: Run tests
+        run: bundle exec rspec --format progress
+
+      - name: Upload screenshots on failure
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: test-screenshots-${{ matrix.ruby }}-${{ matrix.gemfile }}
+          path: spec/dummy/tmp/capybara
+          if-no-files-found: ignore
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+
+      - name: Run RuboCop
+        run: bundle exec rubocop --force-exclusion
