@@ -102,9 +102,18 @@ In `app/assets/stylesheets/active_admin.scss`:
 
 #### esbuild.config.js
 ```javascript
+#!/usr/bin/env node
 const esbuild = require('esbuild');
 const path = require('path');
 
+// IMPORTANT: Set up the alias to resolve the gem's JavaScript file
+// For production apps, you can get the gem path dynamically:
+const { execSync } = require('child_process');
+const gemPath = execSync('bundle show activeadmin_quill_editor', { encoding: 'utf-8' }).trim();
+// Or for development/testing with a local gem:
+// const gemPath = path.resolve(__dirname, '../..'); // Adjust based on your setup
+
+// Configuration for esbuild with proper module resolution
 const config = {
   entryPoints: ['app/javascript/active_admin.js'],
   bundle: true,
@@ -112,15 +121,39 @@ const config = {
   format: 'iife',
   outdir: 'app/assets/builds',
   publicPath: '/assets',
+  loader: {
+    '.js': 'js',
+  },
+  // Define global Quill for the initialization script
+  define: {
+    'global': 'window'
+  },
+  // CRITICAL: Use alias to import the gem's JavaScript from vendor/assets
+  alias: {
+    'activeadmin_quill_editor': path.join(gemPath, 'vendor/assets/javascripts/activeadmin_quill_editor.js')
+  }
 };
 
-// Build or watch
-if (process.argv.includes('--watch')) {
+// Check if we're in watch mode
+const watchMode = process.argv.includes('--watch');
+
+if (watchMode) {
+  // Start the build with watch mode
   esbuild.context(config).then(ctx => {
     ctx.watch();
+    console.log('Watching for changes...');
+  }).catch(error => {
+    console.error('Build failed:', error);
+    process.exit(1);
   });
 } else {
-  esbuild.build(config);
+  // Single build
+  esbuild.build(config).then(() => {
+    console.log('Build completed');
+  }).catch(error => {
+    console.error('Build failed:', error);
+    process.exit(1);
+  });
 }
 ```
 
