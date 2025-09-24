@@ -138,8 +138,8 @@ RSpec.describe 'Quill editor' do
       click_on 'Add New Post'
 
       # Wait for new fields to appear
-      expect(page).to have_selector('[id^="author_posts_attributes_"][id$="_title"]',
-                                   count: initial_post_count + 1, wait: 5)
+      expect(page).to have_css('[id^="author_posts_attributes_"][id$="_title"]',
+                               count: initial_post_count + 1, wait: 5)
 
       first_editor = edit_page.lookup_editor(editor_container: '#author_posts_attributes_0_description_input')
       expect(first_editor.content).to eq('<p>Some content</p>')
@@ -154,7 +154,8 @@ RSpec.describe 'Quill editor' do
 
         # Extract the index from the field ID
         new_editor_id = new_title_field[:id].match(/posts_attributes_(\d+)_title/)[1]
-        second_editor = edit_page.lookup_editor(editor_container: "#author_posts_attributes_#{new_editor_id}_description_input")
+        container_id = "#author_posts_attributes_#{new_editor_id}_description_input"
+        second_editor = edit_page.lookup_editor(editor_container: container_id)
 
         # Clear any existing content and add new content
         second_editor.clear
@@ -165,7 +166,7 @@ RSpec.describe 'Quill editor' do
         expect(Post.last.description).to eq '<p><u>Some underline</u></p>'
       else
         # If Add New Post didn't work, skip this test for older AA versions
-        skip "Add New Post functionality not working properly in this ActiveAdmin version"
+        skip 'Add New Post functionality not working properly in this ActiveAdmin version'
       end
     end
   end
