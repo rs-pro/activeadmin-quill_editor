@@ -29,6 +29,9 @@ jobs:
             gemfile: rails_8.0_active_admin_4.x
           - ruby: '3.1'
             gemfile: rails_8.0_active_admin_4.x
+          # Rails 7.2 requires Ruby 3.1+
+          - ruby: '3.0'
+            gemfile: rails_7.2_active_admin_3.x
           # ActiveAdmin 4 requires Ruby 3.2+
           - ruby: '3.0'
             gemfile: rails_7.2_active_admin_4.x
