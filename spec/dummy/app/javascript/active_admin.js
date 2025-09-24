@@ -15,7 +15,7 @@ try {
 }
 
 // Import the Quill Editor initialization module
-import QuillEditorModule from 'activeadmin_quill_editor';
+import QuillEditorModule from 'activeadmin/quill_editor';
 
 // Now that Quill is available, initialize the editors
 // This ensures proper initialization order without setTimeout hacks

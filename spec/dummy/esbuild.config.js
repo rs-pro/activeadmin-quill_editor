@@ -23,7 +23,7 @@ const config = {
   },
   // Use alias for clean imports
   alias: {
-    'activeadmin_quill_editor': path.join(gemPath, 'vendor/assets/javascripts/activeadmin_quill_editor.js')
+    'activeadmin/quill_editor': path.join(gemPath, 'vendor/assets/javascripts/activeadmin/quill_editor.js')
   }
 };
 

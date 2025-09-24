@@ -2943,9 +2943,9 @@
     }
   });
 
-  // ../../vendor/assets/javascripts/activeadmin_quill_editor.js
-  var require_activeadmin_quill_editor = __commonJS({
-    "../../vendor/assets/javascripts/activeadmin_quill_editor.js"(exports2, module2) {
+  // ../../vendor/assets/javascripts/activeadmin/quill_editor.js
+  var require_quill_editor = __commonJS({
+    "../../vendor/assets/javascripts/activeadmin/quill_editor.js"(exports2, module2) {
       (function() {
         "use strict";
         const defaultTheme = "snow";
@@ -17117,7 +17117,7 @@ ${escapeText(this.code(index, length))}
   var quill_default = core_default;
 
   // app/javascript/active_admin.js
-  var import_activeadmin_quill_editor = __toESM(require_activeadmin_quill_editor());
+  var import_quill_editor = __toESM(require_quill_editor());
   window.Quill = quill_default;
   try {
     const ImageUploader = __require("quill-image-uploader");
@@ -17126,8 +17126,8 @@ ${escapeText(this.code(index, length))}
   }
   if (window.QuillEditor && window.QuillEditor.init) {
     window.QuillEditor.init();
-  } else if (import_activeadmin_quill_editor.default && import_activeadmin_quill_editor.default.init) {
-    import_activeadmin_quill_editor.default.init();
+  } else if (import_quill_editor.default && import_quill_editor.default.init) {
+    import_quill_editor.default.init();
   }
 })();
 /*! Bundled license information:

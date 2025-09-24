@@ -63,8 +63,8 @@ try {
 }
 
 // Import the Quill Editor initialization module from the gem
-// This imports from vendor/assets/javascripts/activeadmin_quill_editor.js
-import QuillEditorModule from 'activeadmin_quill_editor';
+// This imports from vendor/assets/javascripts/activeadmin/quill_editor.js
+import QuillEditorModule from 'activeadmin/quill_editor';
 
 // Now that Quill is available, initialize the editors
 // This ensures proper initialization order without setTimeout hacks
@@ -130,7 +130,7 @@ const config = {
   },
   // CRITICAL: Use alias to import the gem's JavaScript from vendor/assets
   alias: {
-    'activeadmin_quill_editor': path.join(gemPath, 'vendor/assets/javascripts/activeadmin_quill_editor.js')
+    'activeadmin/quill_editor': path.join(gemPath, 'vendor/assets/javascripts/activeadmin/quill_editor.js')
   }
 };
 
